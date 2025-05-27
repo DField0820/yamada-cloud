@@ -405,24 +405,23 @@ export const inviteTeamMember = validatedActionWithUser(
   }
 );
 
-const createApiKeySchema = z.object({
-  name: z.string().min(1).max(100)
+const createSshKeySchema = z.object({
+  name: z.string().min(1).max(100),
+  publicKey: z.string().min(1)
 });
 
-export const createApiKey = validatedActionWithUser(
-  createApiKeySchema,
-  async ({ name }, _formData, user) => {
-    const key = 'sk-' + crypto.randomBytes(32).toString('hex');
-
+export const createSshKey = validatedActionWithUser(
+  createSshKeySchema,
+  async ({ name, publicKey }, _formData, user) => {
     const newKey: NewApiKey = {
       userId: user.id,
       name,
-      key
+      key: publicKey
     };
 
     await dbCreateApiKey(newKey);
 
-    return { newKey: key, success: 'API key created' };
+    return { success: 'SSH key added' };
   }
 );
 
@@ -430,10 +429,10 @@ const deleteApiKeySchema = z.object({
   key: z.string()
 });
 
-export const deleteApiKey = validatedActionWithUser(
+export const deleteSshKey = validatedActionWithUser(
   deleteApiKeySchema,
   async ({ key }, _formData, user) => {
     await dbDeleteApiKey(key, user.id);
-    return { success: 'API key deleted' };
+    return { success: 'SSH key deleted' };
   }
 );
