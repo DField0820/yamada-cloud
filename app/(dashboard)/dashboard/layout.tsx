@@ -27,7 +27,7 @@ export default function DashboardLayout({
     { href: '/dashboard/general', icon: Settings, label: 'General' },
     { href: '/dashboard/activity', icon: Activity, label: 'Activity' },
     { href: '/dashboard/security', icon: Shield, label: 'Security' },
-    { href: '/dashboard/api-keys', icon: Key, label: 'API Keys' }
+    { href: '/dashboard/ssh-keys', icon: Key, label: 'SSH keys' }
   ];
 
   return (
