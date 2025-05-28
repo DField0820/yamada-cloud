@@ -81,12 +81,12 @@ async function main() {
     BillingMode: 'PAY_PER_REQUEST'
   });
 
-  console.log('Creating table: yamada_api_keys');
+  console.log('Creating table: yamada_ssh_keys');
   await createTable({
-    TableName: 'yamada_api_keys',
-    AttributeDefinitions: [{ AttributeName: 'key', AttributeType: 'S' }],
-    KeySchema: [{ AttributeName: 'key', KeyType: 'HASH' }],
-    BillingMode: 'PAY_PER_REQUEST'
+    TableName: 'yamada_ssh_keys',
+      AttributeDefinitions: [{ AttributeName: 'key', AttributeType: 'S' }],
+      KeySchema: [{ AttributeName: 'key', KeyType: 'HASH' }],
+      BillingMode: 'PAY_PER_REQUEST'
   });
 }
 
