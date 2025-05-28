@@ -59,13 +59,13 @@ export async function getTeamForUser(): Promise<TeamDataWithMembers | null> {
   const member = await service.findUserTeam(user.id);
   if (!member) return null;
   const teamRes = await ddb.send(
-    new GetCommand({ TableName: 'teams', Key: { id: member.teamId } })
+    new GetCommand({ TableName: 'yamada_teams', Key: { id: member.teamId } })
   );
   const team = teamRes.Item as Team | undefined;
   if (!team) return null;
   const tmRes = await ddb.send(
     new ScanCommand({
-      TableName: 'team_members',
+      TableName: 'yamada_team_members',
       FilterExpression: 'teamId = :t',
       ExpressionAttributeValues: { ':t': member.teamId }
     })
@@ -73,7 +73,7 @@ export async function getTeamForUser(): Promise<TeamDataWithMembers | null> {
   const members = (tmRes.Items as TeamMember[]) || [];
   const users = await Promise.all(
     members.map(m =>
-      ddb.send(new GetCommand({ TableName: 'users', Key: { id: m.userId } }))
+      ddb.send(new GetCommand({ TableName: 'yamada_users', Key: { id: m.userId } }))
     )
   );
   const withUsers = members.map((m, i) => ({
