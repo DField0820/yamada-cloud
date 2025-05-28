@@ -25,6 +25,7 @@ import {
 } from '@/lib/db';
 import {
   User,
+  type Team,
   type NewUser,
   type NewTeam,
   type NewTeamMember,
@@ -432,7 +433,7 @@ const deleteApiKeySchema = z.object({
 export const deleteSshKey = validatedActionWithUser(
   deleteApiKeySchema,
   async ({ key }, _formData, user) => {
-    await dbDeleteApiKey(key, user.id);
+    await dbDeleteApiKey(key);
     return { success: 'SSH key deleted' };
   }
 );
