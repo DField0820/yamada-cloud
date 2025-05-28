@@ -37,7 +37,7 @@ export async function createUser(user: NewUser): Promise<User> {
   const id = generateId();
   const item = { ...user, id } as User;
   await ddb.send(
-    new PutCommand({ TableName: 'users', Item: item })
+    new PutCommand({ TableName: 'yamada_users', Item: item })
   );
   return item;
 }
@@ -45,7 +45,7 @@ export async function createUser(user: NewUser): Promise<User> {
 export async function findUserByEmail(email: string): Promise<User | null> {
   const res = await ddb.send(
     new ScanCommand({
-      TableName: 'users',
+      TableName: 'yamada_users',
       FilterExpression: '#e = :email',
       ExpressionAttributeNames: { '#e': 'email' },
       ExpressionAttributeValues: { ':email': email }
@@ -57,7 +57,7 @@ export async function findUserByEmail(email: string): Promise<User | null> {
 
 export async function findUserById(id: number): Promise<User | null> {
   const res = await ddb.send(
-    new GetCommand({ TableName: 'users', Key: { id } })
+    new GetCommand({ TableName: 'yamada_users', Key: { id } })
   );
   return res.Item ? (itemToNumber(res.Item as User) as User) : null;
 }
@@ -65,26 +65,26 @@ export async function findUserById(id: number): Promise<User | null> {
 export async function createTeam(team: NewTeam): Promise<Team> {
   const id = generateId();
   const item = { ...team, id } as Team;
-  await ddb.send(new PutCommand({ TableName: 'teams', Item: item }));
+  await ddb.send(new PutCommand({ TableName: 'yamada_teams', Item: item }));
   return item;
 }
 
 export async function getTeamById(id: number): Promise<Team | null> {
-  const res = await ddb.send(new GetCommand({ TableName: 'teams', Key: { id } }));
+  const res = await ddb.send(new GetCommand({ TableName: 'yamada_teams', Key: { id } }));
   return res.Item ? (itemToNumber(res.Item as Team) as Team) : null;
 }
 
 export async function createTeamMember(member: NewTeamMember): Promise<void> {
   const id = generateId();
   await ddb.send(
-    new PutCommand({ TableName: 'team_members', Item: { ...member, id } })
+    new PutCommand({ TableName: 'yamada_team_members', Item: { ...member, id } })
   );
 }
 
 export async function findInvitation(id: number, email: string) {
   const res = await ddb.send(
     new ScanCommand({
-      TableName: 'invitations',
+      TableName: 'yamada_invitations',
       FilterExpression: 'id = :id and #e = :email and #s = :p',
       ExpressionAttributeNames: { '#e': 'email', '#s': 'status' },
       ExpressionAttributeValues: { ':id': id, ':email': email, ':p': 'pending' }
@@ -96,7 +96,7 @@ export async function findInvitation(id: number, email: string) {
 export async function updateInvitationStatus(id: number, status: string) {
   await ddb.send(
     new UpdateCommand({
-      TableName: 'invitations',
+      TableName: 'yamada_invitations',
       Key: { id },
       UpdateExpression: 'set #s = :s',
       ExpressionAttributeNames: { '#s': 'status' },
@@ -114,7 +114,7 @@ export async function logActivity(activity: NewActivityLog): Promise<void> {
 
   await ddb.send(
     new PutCommand({
-      TableName: 'activity_logs',
+      TableName: 'yamada_activity_logs',
       Item: {
         ...activity,
         id,
@@ -127,7 +127,7 @@ export async function logActivity(activity: NewActivityLog): Promise<void> {
 export async function updateUserPassword(id: number, passwordHash: string) {
   await ddb.send(
     new UpdateCommand({
-      TableName: 'users',
+      TableName: 'yamada_users',
       Key: { id },
       UpdateExpression: 'set passwordHash = :p',
       ExpressionAttributeValues: { ':p': passwordHash }
@@ -149,7 +149,7 @@ export async function updateUser(id: number, data: Partial<Pick<User, 'name' | '
   if (expressions.length === 0) return;
   await ddb.send(
     new UpdateCommand({
-      TableName: 'users',
+      TableName: 'yamada_users',
       Key: { id },
       UpdateExpression: `set ${expressions.join(', ')}`,
       ExpressionAttributeNames: { '#n': 'name', '#e': 'email' },
@@ -161,7 +161,7 @@ export async function updateUser(id: number, data: Partial<Pick<User, 'name' | '
 export async function markUserDeleted(id: number) {
   await ddb.send(
     new UpdateCommand({
-      TableName: 'users',
+      TableName: 'yamada_users',
       Key: { id },
       UpdateExpression: 'set deletedAt = :d',
       ExpressionAttributeValues: { ':d': new Date().toISOString() }
@@ -172,7 +172,7 @@ export async function markUserDeleted(id: number) {
 export async function removeTeamMember(memberId: number, teamId: number) {
   await ddb.send(
     new DeleteCommand({
-      TableName: 'team_members',
+      TableName: 'yamada_team_members',
       Key: { id: memberId, teamId }
     })
   );
@@ -181,7 +181,7 @@ export async function removeTeamMember(memberId: number, teamId: number) {
 export async function findExistingMember(email: string, teamId: number) {
   const res = await ddb.send(
     new ScanCommand({
-      TableName: 'users',
+      TableName: 'yamada_users',
       FilterExpression: '#e = :email',
       ExpressionAttributeNames: { '#e': 'email' },
       ExpressionAttributeValues: { ':email': email }
@@ -191,7 +191,7 @@ export async function findExistingMember(email: string, teamId: number) {
   if (!user) return false;
   const tm = await ddb.send(
     new ScanCommand({
-      TableName: 'team_members',
+      TableName: 'yamada_team_members',
       FilterExpression: 'userId = :u and teamId = :t',
       ExpressionAttributeValues: { ':u': user.id, ':t': teamId }
     })
@@ -202,7 +202,7 @@ export async function findExistingMember(email: string, teamId: number) {
 export async function findExistingInvitation(email: string, teamId: number) {
   const res = await ddb.send(
     new ScanCommand({
-      TableName: 'invitations',
+      TableName: 'yamada_invitations',
       FilterExpression: '#e = :email and teamId = :t and #s = :p',
       ExpressionAttributeNames: { '#e': 'email', '#s': 'status' },
       ExpressionAttributeValues: { ':email': email, ':t': teamId, ':p': 'pending' }
@@ -214,27 +214,27 @@ export async function findExistingInvitation(email: string, teamId: number) {
 export async function createInvitation(inv: NewInvitation) {
   const id = generateId();
   await ddb.send(
-    new PutCommand({ TableName: 'invitations', Item: { ...inv, id } })
+    new PutCommand({ TableName: 'yamada_invitations', Item: { ...inv, id } })
   );
 }
 
 export async function createApiKey(key: NewApiKey) {
   const timestamp = new Date().toISOString();
   await ddb.send(
-    new PutCommand({ TableName: 'api_keys', Item: { ...key, timestamp } })
+    new PutCommand({ TableName: 'yamada_api_keys', Item: { ...key, timestamp } })
   );
 }
 
 export async function deleteApiKey(key: string) {
   await ddb.send(
-    new DeleteCommand({ TableName: 'api_keys', Key: { key } })
+    new DeleteCommand({ TableName: 'yamada_api_keys', Key: { key } })
   );
 }
 
 export async function getApiKeys(userId: number): Promise<ApiKey[]> {
   const res = await ddb.send(
     new ScanCommand({
-      TableName: 'api_keys',
+      TableName: 'yamada_api_keys',
       FilterExpression: 'userId = :u',
       ExpressionAttributeValues: { ':u': userId }
     })
@@ -245,7 +245,7 @@ export async function getApiKeys(userId: number): Promise<ApiKey[]> {
 export async function findUserTeam(userId: number) {
   const res = await ddb.send(
     new ScanCommand({
-      TableName: 'team_members',
+      TableName: 'yamada_team_members',
       FilterExpression: 'userId = :u',
       ExpressionAttributeValues: { ':u': userId }
     })
@@ -265,7 +265,7 @@ export async function updateTeam(id: number, data: Partial<Team>) {
   if (expressions.length === 0) return;
   await ddb.send(
     new UpdateCommand({
-      TableName: 'teams',
+      TableName: 'yamada_teams',
       Key: { id },
       UpdateExpression: 'set ' + expressions.join(', '),
       ExpressionAttributeNames: names,
@@ -277,7 +277,7 @@ export async function updateTeam(id: number, data: Partial<Team>) {
 export async function getActivityLogsForUser(userId: number): Promise<ActivityLog[]> {
   const res = await ddb.send(
     new ScanCommand({
-      TableName: 'activity_logs',
+      TableName: 'yamada_activity_logs',
       FilterExpression: 'userId = :u',
       ExpressionAttributeValues: { ':u': userId }
     })
@@ -288,7 +288,7 @@ export async function getActivityLogsForUser(userId: number): Promise<ActivityLo
 export async function getTeamByStripeCustomerId(customerId: string): Promise<Team | null> {
   const res = await ddb.send(
     new ScanCommand({
-      TableName: 'teams',
+      TableName: 'yamada_teams',
       FilterExpression: 'stripeCustomerId = :c',
       ExpressionAttributeValues: { ':c': customerId }
     })

@@ -35,25 +35,25 @@ async function createTable(params: CreateTableCommandInput) {
 
 async function main() {
   console.log(`Using region ${process.env.AWS_REGION}`);
-  console.log('Creating table: users');
+  console.log('Creating table: yamada_users');
   await createTable({
-    TableName: 'users',
+    TableName: 'yamada_users',
     AttributeDefinitions: [{ AttributeName: 'id', AttributeType: 'N' }],
     KeySchema: [{ AttributeName: 'id', KeyType: 'HASH' }],
     BillingMode: 'PAY_PER_REQUEST'
   });
 
-  console.log('Creating table: teams');
+  console.log('Creating table: yamada_teams');
   await createTable({
-    TableName: 'teams',
+    TableName: 'yamada_teams',
     AttributeDefinitions: [{ AttributeName: 'id', AttributeType: 'N' }],
     KeySchema: [{ AttributeName: 'id', KeyType: 'HASH' }],
     BillingMode: 'PAY_PER_REQUEST'
   });
 
-  console.log('Creating table: team_members');
+  console.log('Creating table: yamada_team_members');
   await createTable({
-    TableName: 'team_members',
+    TableName: 'yamada_team_members',
     AttributeDefinitions: [
       { AttributeName: 'id', AttributeType: 'N' },
       { AttributeName: 'teamId', AttributeType: 'N' }
@@ -65,25 +65,25 @@ async function main() {
     BillingMode: 'PAY_PER_REQUEST'
   });
 
-  console.log('Creating table: activity_logs');
+  console.log('Creating table: yamada_activity_logs');
   await createTable({
-    TableName: 'activity_logs',
+    TableName: 'yamada_activity_logs',
     AttributeDefinitions: [{ AttributeName: 'id', AttributeType: 'N' }],
     KeySchema: [{ AttributeName: 'id', KeyType: 'HASH' }],
     BillingMode: 'PAY_PER_REQUEST'
   });
 
-  console.log('Creating table: invitations');
+  console.log('Creating table: yamada_invitations');
   await createTable({
-    TableName: 'invitations',
+    TableName: 'yamada_invitations',
     AttributeDefinitions: [{ AttributeName: 'id', AttributeType: 'N' }],
     KeySchema: [{ AttributeName: 'id', KeyType: 'HASH' }],
     BillingMode: 'PAY_PER_REQUEST'
   });
 
-  console.log('Creating table: api_keys');
+  console.log('Creating table: yamada_api_keys');
   await createTable({
-    TableName: 'api_keys',
+    TableName: 'yamada_api_keys',
     AttributeDefinitions: [{ AttributeName: 'key', AttributeType: 'S' }],
     KeySchema: [{ AttributeName: 'key', KeyType: 'HASH' }],
     BillingMode: 'PAY_PER_REQUEST'
