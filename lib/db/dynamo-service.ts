@@ -221,20 +221,20 @@ export async function createInvitation(inv: NewInvitation) {
 export async function createApiKey(key: NewApiKey) {
   const timestamp = new Date().toISOString();
   await ddb.send(
-    new PutCommand({ TableName: 'yamada_api_keys', Item: { ...key, timestamp } })
+    new PutCommand({ TableName: 'yamada_ssh_keys', Item: { ...key, timestamp } })
   );
 }
 
 export async function deleteApiKey(key: string) {
   await ddb.send(
-    new DeleteCommand({ TableName: 'yamada_api_keys', Key: { key } })
+    new DeleteCommand({ TableName: 'yamada_ssh_keys', Key: { key } })
   );
 }
 
 export async function getApiKeys(userId: number): Promise<ApiKey[]> {
   const res = await ddb.send(
     new ScanCommand({
-      TableName: 'yamada_api_keys',
+      TableName: 'yamada_ssh_keys',
       FilterExpression: 'userId = :u',
       ExpressionAttributeValues: { ':u': userId }
     })
