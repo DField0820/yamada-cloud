@@ -8,7 +8,7 @@ export function Terminal() {
   const [copied, setCopied] = useState(false);
   const terminalSteps = [
     { type: 'cmd', text: 'ssh-keygen -t ed25519' },
-    { type: 'cmd', text: 'ssh -i ~/.ssh/id_ed25519 terumi@hostname.yamada.cloud' },
+    { type: 'cmd', text: 'ssh -i ~/.ssh/id_ed25519 yamada@yamada.degima.ai -p 10001' },
     { type: 'cmd', text: 'cd ~/projects/cfd-solver' },
     { type: 'cmd', text: 'mpirun -n 8 ./simulate flow.yaml' },
     { type: 'output', text: '[✔] Simulation started on 8 cores' },

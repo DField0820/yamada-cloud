@@ -11,8 +11,8 @@ export default function HomePage() {
             {/* <div className="sm:text-center md:max-w-2xl md:mx-auto lg:col-span-6 lg:text-left"> */}
             <div className="sm:text-center md:max-w-3xl md:mx-auto lg:col-span-6 lg:text-left">
               <h1 className="text-4xl font-bold text-gray-900 tracking-tight sm:text-5xl md:text-6xl">
-                古い計算機に、
-                <span className="block text-orange-500">もう一度、通電を。</span>
+                みんなのおうちで、
+                <span className="block text-orange-500">動態保存しようぜ！</span>
               </h1>
               <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-xl lg:text-lg xl:text-xl">
                 山田くらうどは、古い計算機を動体保存し、<br />
