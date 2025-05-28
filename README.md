@@ -37,6 +37,12 @@ Use the included setup script to create your `.env` file:
 pnpm db:setup
 ```
 
+The setup script will ask for your `BASE_URL`. You can also provide it in advance:
+
+```bash
+BASE_URL=https://example.com pnpm db:setup
+```
+
 Run the database migrations and seed the database with a default user and team.
 
 ```bash

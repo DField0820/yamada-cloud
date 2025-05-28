@@ -134,13 +134,24 @@ async function createStripeWebhook(): Promise<string> {
   }
 }
 
+
+async function getBaseUrl(): Promise<string> {
+  console.log('Step 5: Setting BASE_URL');
+  const defaultUrl = 'http://localhost:3000';
+  if (process.env.BASE_URL) {
+    return process.env.BASE_URL;
+  }
+  const answer = await question(`Enter BASE_URL (${defaultUrl}): `);
+  return answer.trim() || defaultUrl;
+}
+
 function generateAuthSecret(): string {
-  console.log('Step 5: Generating AUTH_SECRET...');
+  console.log('Step 6: Generating AUTH_SECRET...');
   return crypto.randomBytes(32).toString('hex');
 }
 
 async function writeEnvFile(envVars: Record<string, string>) {
-  console.log('Step 6: Writing environment variables to .env');
+  console.log('Step 7: Writing environment variables to .env');
   const envContent = Object.entries(envVars)
     .map(([key, value]) => `${key}=${value}`)
     .join('\n');
@@ -155,7 +166,7 @@ async function main() {
   const dbEnv = await getDatabaseEnv();
   const STRIPE_SECRET_KEY = await getStripeSecretKey();
   const STRIPE_WEBHOOK_SECRET = await createStripeWebhook();
-  const BASE_URL = 'http://localhost:3000';
+  const BASE_URL = await getBaseUrl();
   const AUTH_SECRET = generateAuthSecret();
 
   await writeEnvFile({
